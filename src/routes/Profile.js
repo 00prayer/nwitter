@@ -1,5 +1,5 @@
-import { authService, dbService } from "fbase"; 
-import { useState, useEffect } from "react";
+import { authService } from "fbase"; 
+import { useState /*, useEffect */ } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Profile = ({ userObj, refreshUser }) => {
@@ -38,13 +38,13 @@ const Profile = ({ userObj, refreshUser }) => {
     // }, []);
 
     return (
-        <>
-            <form onSubmit={onSubmit}>
-                <input type="text" onChange={onChange} placeholder="Display name" value={newDisplayName} />
-                <input type="submit" value="Update Profile" />
+        <div className="container">
+            <form onSubmit={onSubmit} className="profileForm">
+                <input type="text" onChange={onChange} placeholder="Display name" value={newDisplayName} autoFocus className="formInput" />
+                <input type="submit" value="Update Profile" className="formBtn" style={{ marginTop: 10 }} />
             </form>
-            <button onClick={onLogOutClick}>LogOut</button>
-        </>
+            <button className="formBtn cancelBtn logOut" onClick={onLogOutClick}>Log Out</button>
+        </div>
 
     );
 };

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { dbService, storageService } from "fbase";
 import { v4 as uuidv4 } from "uuid";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus, faTimes } from "@fortawesome/free-solid-svg-icons";
 
 const NweetFactory = ({ userObj }) => {
     const [nweet, setNweet] = useState("");
@@ -8,6 +10,9 @@ const NweetFactory = ({ userObj }) => {
 
     const onSubmit = async (event) => {
         event.preventDefault();
+
+        if (nweet === "") { return; }
+
         let attachmentUrl = "";
 
         if(attachment !== "")
@@ -39,28 +44,41 @@ const NweetFactory = ({ userObj }) => {
         const { target : { files } } = event;
         
         const theFile = files[0];
-        
+
         const reader = new FileReader();
         reader.onloadend = (finishedEvent) => {
             const { currentTarget: {result} } = finishedEvent;
 
             setAttachment(result);
-        };        
-        reader.readAsDataURL(theFile);
+        };
+        
+        if(Boolean(theFile)) { 
+            reader.readAsDataURL(theFile);
+        };
+        
     };
 
     const onClearAttachment = () => setAttachment("");
 
     return (
         <>
-            <form onSubmit={onSubmit}>
-                <input value={nweet} onChange={onChange} type="text" placeholder="What's on your mind?" maxLength={120} />
-                <input type="file" accept="image/*" onChange={onFileChange} />                                                
-                <input type="submit" value="Nweet" />
+            <form onSubmit={onSubmit}  className="factoryForm" >
+                <div className="factoryInput__container">
+                    <input value={nweet} onChange={onChange} type="text" placeholder="What's on your mind?" maxLength={120} className="factoryInput__input" />
+                    <input type="submit" value="&rarr;" className="factoryInput__arrow" />
+                </div>
+                <label for="attach-file" className="factoryInput__label">
+                    <span>Add photos</span>
+                    <FontAwesomeIcon icon={faPlus} />
+                </label>
+                <input id="attach-file" type="file" accept="image/*" onChange={onFileChange} style={{ opacity: 0,}} />
                 {attachment && (
-                    <div>                        
-                        <img alt="viewer" src={attachment} width="50px" height="50px" />
-                        <button onClick={onClearAttachment} >Clear</button>
+                    <div className="factoryForm__attachment">                        
+                        <img alt="viewer" src={attachment} style={{ backgroundImage: attachment }} />
+                        <div className="factoryForm__clear" onClick={onClearAttachment}>
+                            <span>Remove</span>
+                            <FontAwesomeIcon icon={faTimes} />
+                        </div>
                     </div>
                 )}
             </form>
